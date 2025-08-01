@@ -8,7 +8,7 @@
 
 Github repository for the following paper:
 
-Changhong Wang, Michel Olvera, and Gaël Richard. "**Melody-Lyrics Matching with Contrastive Alignment Loss**". Preprint HAL: hal.science/hal-05191876, 2025. (Under Review)
+Changhong Wang, Michel Olvera, and Gaël Richard. "**Melody-Lyrics Matching with Contrastive Alignment Loss**". _Preprint HAL: hal.science/hal-05191876_, 2025. (Under Review)
 
 <p align="center">
 <img src="assets/MLM_fig1.png" width="600" />
