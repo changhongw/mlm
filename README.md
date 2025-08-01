@@ -1,8 +1,10 @@
 # MLM: Melody-Lyrics Matching with Contrastive Alignment Loss
 
-This is the github repository for the following paper:
+Github repository for the following paper:
 
 Changhong Wang, Michel Olvera, and Gaël Richard. Melody-Lyrics Matching with Contrastive Alignment Loss, Preprint HAL:https://hal.science/hal-05191876, 2025. (Under Review)
+
+<img src="assets/MLM_fig1.png" width="200" />
 
 To supplement Figure 7 in the paper, we provide a demo webpage with more examples of the matched results: https://changhongw.github.io/publications/mlm.
 
