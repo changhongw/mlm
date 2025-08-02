@@ -1,7 +1,7 @@
 # MLM: Melody-Lyrics Matching with Contrastive Alignment Loss
 
 <p align="center">
-📔 <a href="https://arxiv.org/">ArXiv</a> (to appear) &nbsp;&nbsp;
+📔 ArXiv (to appear) &nbsp;&nbsp;
 📔 <a href="https://hal.science/hal-05191876">HAL</a> &nbsp;&nbsp;
 🎵 <a href="https://changhongw.github.io/publications/mlm">Demo</a>
 </p>
