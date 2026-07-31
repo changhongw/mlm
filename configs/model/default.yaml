@@ -1,0 +1,35 @@
+_target_: src.models.mlm_cal.MLM_CAL
+
+encoder:
+  _target_: src.models.networks.transformer_RPE.Transformer
+  music_in: 179  # input dimension of melody features
+  lyric_in: 67 # input dimension of lyric features
+  d_model: 64 # dimension of the model
+  dim_ffd: 256 # dimension of the feed-forward network
+  nhead: 4 # number of attention heads
+  num_layers: 2 # number of transformer layers
+  er_len: 1024 # length of the relative positional encoding
+  dropout: 0.1 # dropout rate
+
+contrastive_loss_fn:
+  _target_: src.losses.contrastive.Contrastive_loss
+  gamma: 1.0  # initial value of gamma for sdtw loss
+  temperature: 0.5  # initial temperature if temperature annealing is used
+  contrastive_setting: "shuffle_negative" # ["collapse_sequence", "withinbatch_negative", "shuffle_negative"]
+  regularization_weight: 0.5
+  cross_ratio: 0.0 # ratio of cross-modal pairs in the batch
+  shuffle_ratio: 1.0
+  sdtw_step_weight: "equal" # ["equal", "lenInform"]
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: ${effective_lr:${model.base_lr},${data.batch_size},${trainer.devices},${trainer.num_nodes}, ${model.contrastive_loss_fn.contrastive_setting}}
+  weight_decay: 0
+
+scheduler:
+  _target_: src.utils.scheduler.LinearWarmupCosineAnnealingLR
+  _partial_: true
+  warmup_epochs: 250
+
+base_lr: 1e-4

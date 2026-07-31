@@ -1,0 +1,12 @@
+# https://wandb.ai
+
+wandb:
+  _target_: lightning.pytorch.loggers.wandb.WandbLogger
+  save_dir: experiments
+  offline: True
+  project: "mlm"
+  log_model: False # upload lightning ckpts
+  save_code: False
+  prefix: "" # a string to put at the beginning of metric keys
+  group: ""
+  job_type: ""

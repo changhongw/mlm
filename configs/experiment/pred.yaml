@@ -1,0 +1,95 @@
+# @package _global_
+
+# to execute this experiment run:
+# `pyton train.py experiment=experiment_01`
+
+defaults:
+  - override /data: default
+  - override /model: default
+  - override /callbacks: default
+  - override /trainer: default
+  - override /logger: wandb
+  - override /paths: default
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags: ["TASLP"]
+
+paths:
+  data_dir: .../data/
+
+logger:
+  wandb:
+    offline: True
+    project: "mlm"
+    name: "Seg12_gama01a050"
+    tags: ${tags}
+
+data:
+  # data set metadata
+  dali_split_dir: ${paths.data_dir}/DALI_English_songs.csv
+  # dataset extracted features
+  dali_feature_dir: ${paths.data_dir}/DALI_features.hdf5
+  # test dataset dir with manually checked annotations
+  dali_test_dir: ${paths.data_dir}/DALI50
+  # batch size for data loader
+  batch_size: 32
+  # number of workers for data loader
+  num_workers: 3
+  # number of candidates considered for each query during validation
+  candi_ratio: 0.5  # -1 means all candidates
+  # number of lines condiered for segmenting the full piece
+  seg_lnum: 12
+  # number of lines overlapped between segments
+  seg_overlap: 0
+  # training ratio in the developmement set
+  train_ratio: 0.8
+  # how many percent of the data to use for training and validation
+  metric_topk: 5
+
+model:
+  encoder: # transformer encoder
+    music_in: 177  # input dimension of melody features
+    lyric_in: 43 # input dimension of lyric features
+    d_model: 256 # dimension of the model
+    dim_ffd: 1024 # dimension of the feed-forward network
+    nhead: 4 # number of attention heads
+    num_layers: 2 # number of transformer layers
+    er_len: 1024 # length of the relative positional encoding
+    dropout: 0.1 # dropout rate
+  contrastive_loss_fn:
+    gamma: 0.1  # gamma for sdtw
+    temperature: 0.5  # temperature for contrastive loss
+    contrastive_setting: "shuffle_negative"  # ["collapse_sequence", "withinbatch_negative", "shuffle_negative"]
+    regularization_weight: 0.5 # weight for length-informed regularization
+    cross_ratio: 0.0 # ratio of cross-modal pairs in the batch
+    shuffle_ratio: 1.0 # ratio of frames to shffule within a sample
+    sdtw_step_weight: "equal" # sequal step weights for sdtw
+  base_lr: 1e-5  # lr per GPU
+  optimizer:
+    weight_decay: 1e-4
+  scheduler:
+    warmup_epochs: 2
+
+trainer:
+  max_epochs: 20
+  log_every_n_steps: 1
+  gradient_clip_val: 1.0  # Value for clipping
+  gradient_clip_algorithm: "norm"  # Clip individual values
+  precision: "16-mixed"
+  accelerator: "gpu"
+  devices: 1
+  strategy: "auto"
+  num_nodes: 1
+
+callbacks:
+  model_checkpoint:
+    dirpath: experiments/${logger.wandb.name}_${now:%Y-%m-%d}_${now:%H-%M-%S} # directory to save the model file
+    filename: ${logger.wandb.name}_${now:%Y-%m-%d}_${now:%H-%M-%S} # checkpoint filename
+    monitor: "loss/val" # name of the logged metric which determines when model is improving
+    save_last: True # additionally always save an exact copy of the last checkpoint to a file last.ckpt
+    save_top_k: 1 # save k best models (determined by above metric)
+    mode: "min" # "max" means higher metric value is better, can be also "min"
+    every_n_epochs: 1 # number of epochs between checkpoints
+    save_weights_only: False

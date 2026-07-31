@@ -1,0 +1,21 @@
+_target_: src.data.datamodule.DALIdataModule
+# data set metadata
+dali_split_dir: ${paths.data_dir}/DALI_English_songs.csv
+# dataset extracted features
+dali_feature_dir: ${paths.data_dir}/DALI_features.hdf5
+# test dataset dir with manually checked annotations
+dali_test_dir: ${paths.data_dir}/DALI50
+# batch size for data loader
+batch_size: 32
+# number of workers for data loader
+num_workers: 0
+# number of candidates considered for each query during validation
+candi_ratio: 0.5  # -1 means all candidates
+# number of lines condiered for segmenting the full piece
+seg_lnum: 12
+# number of lines overlapped between segments
+seg_overlap: 0
+# training ratio in the developmement set
+train_ratio: 0.8
+# how many percent of the data to use for training and validation
+metric_topk: 5
